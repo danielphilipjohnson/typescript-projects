@@ -47,7 +47,9 @@ export interface DbTopicTrend {
   tweetCount: number;
   quote?: DbTopicTrendQuote;
 }
+
 export type DbTrend = DbTopicTrend | DbHashtagTrend;
+
 export interface DbSuggestion {
   id: string;
   name: string;
@@ -75,6 +77,7 @@ class Db {
     this.db = low(this.adapter);
     this.db.read();
   }
+
   async initDefaults() {
     return await this.db
       .defaults<DbSchema>({
@@ -101,18 +104,21 @@ class Db {
       .find((u) => u.id === id)
       .value();
   }
+
   getTweetById(id: string) {
     return this.db
       .get('tweets')
       .find((t) => t.id === id)
       .value();
   }
+
   getUserTweets(userId: string) {
     return this.db
       .get('tweets')
       .filter((t) => t.userId === userId)
       .value();
   }
+
   getUserFavorites(userId: string) {
     return this.db
       .get('favorites')
@@ -164,9 +170,11 @@ class Db {
       .filter((t) => t.tweetId === tweetId)
       .value();
   }
+
   getFavoriteCountForTweet(tweetId: string): number {
     return this.getFavoritesForTweet(tweetId).length;
   }
+
   async createSuggestion(
     trendProps: Pick<DbSuggestion, 'avatarUrl' | 'handle' | 'name' | 'reason'>
   ): Promise<DbSuggestion> {
@@ -178,6 +186,7 @@ class Db {
     await suggestions.push(newSuggestion).write();
     return newSuggestion;
   }
+
   async createHashtagTrend(
     trendProps: Pick<DbHashtagTrend, 'tweetCount' | 'hashtag'>
   ): Promise<DbHashtagTrend> {
@@ -190,6 +199,7 @@ class Db {
     await hashtagTrends.push(newTrend).write();
     return newTrend;
   }
+  
   async createTopicTrend(
     trendProps: Pick<DbTopicTrend, 'topic' | 'tweetCount'>,
     quoteProps?: Pick<DbTopicTrendQuote, 'title' | 'imageUrl' | 'description'>
