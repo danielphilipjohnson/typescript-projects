@@ -5,10 +5,10 @@ const queryTwitterResolvers: QueryResolvers<TwitterResolverContext> = {
   currentUser: () => {
     return {
       id: '123',
-      name: 'John Doe',
-      handle: 'johndoe',
-      coverUrl: '',
-      avatarUrl: '',
+      name: 'Daniel Philip Johnson',
+      handle: 'danielp_johnson',
+      coverUrl: 'http://localhost:3000/static/banner.jpeg',
+      avatarUrl: 'http://localhost:3000/static/profile-pic.jpeg',
       createdAt: '',
       updatedAt: '',
     };
