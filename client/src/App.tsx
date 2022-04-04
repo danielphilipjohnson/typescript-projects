@@ -5,6 +5,37 @@ import LeftSidebar from './LeftSidebar';
 import RightBar from './RightBar';
 import Timeline from './Timeline';
 
+import { gql } from '@apollo/client';
+import { useGetCurrentUserQuery } from './generated/graphql';
+
+export const GET_CURRENT_USER = gql`
+  query GetCurrentUser {
+    currentUser {
+      id
+      name
+      handle
+      avatarUrl
+      createdAt
+      stats {
+        tweetCount
+        followingCount
+        followerCount
+      }
+      favorites {
+        tweet {
+          id
+        }
+      }
+    }
+    suggestions {
+      name
+      handle
+      avatarUrl
+      reason
+    }
+  }
+`;
+
 const CURRENT_USER = {
   name: 'Daniel Philip Johnson',
   handle: 'danielp_johnson',
@@ -51,6 +82,13 @@ const SUGGESTIONS = [
 ];
 
 const App: React.FC = () => {
+
+  const { loading, error, data } = useGetCurrentUserQuery();
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+  if (!data) return <p>No data.</p>;
+  
+  const { currentUser, suggestions = [] } = data;
   const { favorites: rawFavorites } = CURRENT_USER;
   const favorites = (rawFavorites || [])
     .map((f) => f.tweet?.id)
@@ -58,15 +96,15 @@ const App: React.FC = () => {
 
   return (
     <div>
-      <LeftSidebar currentUser={CURRENT_USER} />
-      <Header currentUser={CURRENT_USER} />
+      <LeftSidebar currentUser={currentUser} />
+      <Header currentUser={currentUser} />
 
       <div id="container" className="wrapper nav-closed">
         <Timeline
-          currentUserId={CURRENT_USER.id}
+          currentUserId={currentUser.id}
           currentUserFavorites={favorites}
         />
-        <RightBar trends={TRENDS} suggestions={SUGGESTIONS} />
+        <RightBar trends={TRENDS} suggestions={suggestions}/>
       </div>
     </div>
   );
