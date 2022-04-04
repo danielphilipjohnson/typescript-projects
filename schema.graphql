@@ -39,3 +39,7 @@ type TweetStats {
   retweetCount: Int!
   commentCount: Int!
 }
+
+type Mutation {
+  createTweet(userId: String!, body: String!): Tweet!
+}
