@@ -26,11 +26,16 @@ export async function createApolloServer(
     resolvers: createResolvers(),
   });
 
-  const context: () => TwitterResolverContext = () => ({ db });
 
   const server = new ApolloServer({
     schema: SCHEMA,
-    context,
+    context: () =>
+      ({
+        db,
+        dbTweetCache: {},
+        dbTweetToFavoriteCountMap: {},
+        dbUserCache: {},
+      } as TwitterResolverContext),
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   });
 
