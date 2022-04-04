@@ -21,7 +21,13 @@ export const GET_CURRENT_USER = gql`
         followingCount
         followerCount
       }
+      favorites {
+        tweet {
+          id
+        }
+      }
     }
+    
     suggestions {
       name
       handle
@@ -31,31 +37,6 @@ export const GET_CURRENT_USER = gql`
   }
 `;
 
-const CURRENT_USER = {
-  name: 'Daniel Philip Johnson',
-  handle: 'danielp_johnson',
-  avatarUrl: 'http://localhost:3000/static/profile-pic.jpeg',
-  coverUrl: 'http://localhost:3000/static/banner.jpeg',
-  createdAt: '2022-03-23T03:55:59.612Z',
-  updatedAt: '2022-03-23T03:55:59.612Z',
-  id: 'user-15a37948-7712-4e0b-a554-2fef33f31697',
-  favorites: [
-    {
-      userId: 'user-15a37948-7712-4e0b-a554-2fef33f31697',
-      tweet: {
-        userId: 'user-895b3d36-8bdf-4c29-be10-7a5e7ff3287f',
-        message:
-          '@clancyalice I just deployed my new graphql website to netlify. It looks great!',
-        createdAt: '2022-03-23T03:55:59.614Z',
-        updatedAt: '2022-03-23T03:55:59.614Z',
-        id: 'tweet-0db3e976-92cc-4846-9b96-e2a03da0b4e2',
-      },
-      createdAt: '2022-03-23T03:55:59.615Z',
-      updatedAt: '2022-03-23T03:55:59.615Z',
-      id: 'favorite-e4859379-b5ce-49d3-978c-a54b3de4ea7e',
-    },
-  ],
-};
 
 const TRENDS = [
   {
@@ -67,27 +48,18 @@ const TRENDS = [
   },
 ];
 
-const SUGGESTIONS = [
-  {
-    name: 'TypeScript Project',
-    handle: 'TypeScript',
-    avatarUrl: 'http://localhost:3000/static/ts-logo.png',
-    reason: 'Because you follow @MichaelLNorth',
-  },
-];
-
 const App: React.FC = () => {
 
   const { loading, error, data } = useGetCurrentUserQuery();
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
   if (!data) return <p>No data.</p>;
-  
+
   const { currentUser, suggestions = [] } = data;
-  const { favorites: rawFavorites } = CURRENT_USER;
-  const favorites = (rawFavorites || [])
-    .map((f) => f.tweet?.id)
-    .filter(isDefined);
+  const { favorites: rawFavorites } = currentUser;
+  const favorites = (rawFavorites || []).filter(isDefined)
+    .map((f) => f.tweet.id);
+
 
   return (
     <div>
@@ -99,7 +71,7 @@ const App: React.FC = () => {
           currentUserId={currentUser.id}
           currentUserFavorites={favorites}
         />
-        <RightBar trends={TRENDS} suggestions={suggestions}/>
+        <RightBar trends={TRENDS} suggestions={suggestions} />
       </div>
     </div>
   );
