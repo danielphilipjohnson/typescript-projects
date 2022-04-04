@@ -21,11 +21,6 @@ export const GET_CURRENT_USER = gql`
         followingCount
         followerCount
       }
-      favorites {
-        tweet {
-          id
-        }
-      }
     }
     suggestions {
       name
