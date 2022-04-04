@@ -22,6 +22,11 @@ export const GET_CURRENT_USER = gql`
         followerCount
       }
     }
+    favorites {
+      tweet {
+        id
+      }
+    }
     suggestions {
       name
       handle
@@ -64,15 +69,6 @@ const TRENDS = [
     title: 'TypeScript',
     description: 'Using TypeScript with React',
     imageUrl: 'http://localhost:3000/static/ts-logo.png',
-  },
-];
-
-const SUGGESTIONS = [
-  {
-    name: 'TypeScript Project',
-    handle: 'TypeScript',
-    avatarUrl: 'http://localhost:3000/static/ts-logo.png',
-    reason: 'Because you follow @MichaelLNorth',
   },
 ];
 
